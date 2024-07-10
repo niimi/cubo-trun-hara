@@ -20,16 +20,16 @@ function quaternion_mult(q1,q2){
 function quaternion_inverse(q1){
     return {x: -q1.x, y: -q1.y, z: -q1.z, w: q1.w};
 }
-function setOrigin(x, y, z, w) {
-    turnNum = 0;
-    originInv = quaternion_inverse({x: x, y: y, z: z, w: w});
-}
+// function setOrigin(x, y, z, w) {
+//     turnNum = 0;
+//     originInv = quaternion_inverse({x: x, y: y, z: z, w: w});
+// }
 function quat(x, y, z, w, currentTime) {
     var q = {
         x: x, y: y, z: z, w: w
     };
 
-    q = quaternion_mult(originInv, q);
+    // q = quaternion_mult(originInv, q);
 
     var deltaTime;
     var deltaTimeValue;

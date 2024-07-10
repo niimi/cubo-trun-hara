@@ -1,0 +1,116 @@
+{
+	"patcher" : 	{
+		"fileversion" : 1,
+		"appversion" : 		{
+			"major" : 8,
+			"minor" : 5,
+			"revision" : 6,
+			"architecture" : "x64",
+			"modernui" : 1
+		}
+,
+		"classnamespace" : "dsp.gen",
+		"rect" : [ 461.0, 307.0, 1121.0, 1006.0 ],
+		"bglocked" : 0,
+		"openinpresentation" : 0,
+		"default_fontsize" : 12.0,
+		"default_fontface" : 0,
+		"default_fontname" : "Consolas",
+		"gridonopen" : 1,
+		"gridsize" : [ 15.0, 15.0 ],
+		"gridsnaponopen" : 2,
+		"objectsnaponopen" : 0,
+		"statusbarvisible" : 2,
+		"toolbarvisible" : 1,
+		"lefttoolbarpinned" : 0,
+		"toptoolbarpinned" : 0,
+		"righttoolbarpinned" : 0,
+		"bottomtoolbarpinned" : 0,
+		"toolbars_unpinned_last_save" : 0,
+		"tallnewobj" : 0,
+		"boxanimatetime" : 200,
+		"enablehscroll" : 1,
+		"enablevscroll" : 1,
+		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
+		"style" : "",
+		"subpatcher_template" : "Consolas",
+		"assistshowspatchername" : 0,
+		"boxes" : [ 			{
+				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 30.0, 15.0, 35.0, 23.0 ],
+					"text" : "in 1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-2",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 305.0, 14.0, 35.0, 23.0 ],
+					"text" : "in 2"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"code" : "tf2(src, delay, b0, b1, b2, a1, a2) {\r\n\tsub = src - (delay.read(1) * a1 + delay.read(2) * a2);\r\n\tdst = sub * b0 + delay.read(1) * b1 + delay.read(2) * b2;\r\n\tdelay.write(sub);\r\n\t\r\n\treturn dst;\r\n}\r\ntf2s(src, delay, b2,b1,b0,a1,a0,w1) {\r\n\tc   = 1/tan(w1*0.5/samplerate); // bilinear-transform scale-factor\r\n\tcsq = c*c;\r\n\td   = a0 + a1 * c + csq;\r\n\tb0d = (b0 + b1 * c + b2 * csq)/d;\r\n  \tb1d = 2 * (b0 - b2 * csq)/d;\r\n  \tb2d = (b0 - b1 * c + b2 * csq)/d;\r\n\ta1d = 2 * (a0 - csq)/d;\r\n \ta2d = (a0 - a1*c + csq)/d;\r\n\treturn tf2(src, delay, b0d,b1d,b2d,a1d,a2d);\r\n}\r\n\r\n\r\nresonBP(src, delay, freq, q, gain) {\r\n\twc = 2 * PI * freq;\r\n\ta1 = 1 / q;\r\n    a0 = 1;\r\n    b2 = 0;\r\n    b1 = gain;\r\n    b0 = 0;\r\n\treturn tf2s(src, delay, b2, b1, b0, a1, a0, wc);\r\n}\r\n\r\nDelay del(2);\r\nParam q(0.5, 0.000001, 1);\r\nParam gain(1);\r\n\r\nfreq = in2;\r\nsrc = in1;\r\n\r\nout1 = resonBP(src, del, freq, q, gain);",
+					"fontface" : 0,
+					"fontname" : "<Monospaced>",
+					"fontsize" : 12.0,
+					"id" : "obj-3",
+					"maxclass" : "codebox",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 30.0, 75.0, 645.0, 540.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 30.0, 645.0, 41.0, 23.0 ],
+					"text" : "out 1"
+				}
+
+			}
+ ],
+		"lines" : [ 			{
+				"patchline" : 				{
+					"destination" : [ "obj-3", 0 ],
+					"source" : [ "obj-1", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-3", 1 ],
+					"source" : [ "obj-2", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"source" : [ "obj-3", 0 ]
+				}
+
+			}
+ ]
+	}
+
+}
