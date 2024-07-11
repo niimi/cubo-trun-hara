@@ -1,0 +1,135 @@
+{
+	"patcher" : 	{
+		"fileversion" : 1,
+		"appversion" : 		{
+			"major" : 8,
+			"minor" : 1,
+			"revision" : 11,
+			"architecture" : "x64",
+			"modernui" : 1
+		}
+,
+		"classnamespace" : "dsp.gen",
+		"rect" : [ 58.0, 341.0, 703.0, 861.0 ],
+		"bglocked" : 0,
+		"openinpresentation" : 0,
+		"default_fontsize" : 12.0,
+		"default_fontface" : 0,
+		"default_fontname" : "Consolas",
+		"gridonopen" : 1,
+		"gridsize" : [ 15.0, 15.0 ],
+		"gridsnaponopen" : 1,
+		"objectsnaponopen" : 1,
+		"statusbarvisible" : 2,
+		"toolbarvisible" : 1,
+		"lefttoolbarpinned" : 0,
+		"toptoolbarpinned" : 0,
+		"righttoolbarpinned" : 0,
+		"bottomtoolbarpinned" : 0,
+		"toolbars_unpinned_last_save" : 0,
+		"tallnewobj" : 0,
+		"boxanimatetime" : 200,
+		"enablehscroll" : 1,
+		"enablevscroll" : 1,
+		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
+		"style" : "",
+		"subpatcher_template" : "Consolas",
+		"assistshowspatchername" : 0,
+		"boxes" : [ 			{
+				"box" : 				{
+					"id" : "obj-5",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 105.0, 15.0, 35.0, 23.0 ],
+					"text" : "in 3"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 15.0, 15.0, 35.0, 23.0 ],
+					"text" : "in 1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-2",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 60.0, 15.0, 35.0, 23.0 ],
+					"text" : "in 2"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"code" : "History m_freq(100);\r\nHistory m_bw(1);\r\nHistory m_y1(0);\r\nHistory m_y2(0);\r\nHistory m_a0(0);\r\nHistory m_b1(0);\r\nHistory m_b2(0);\r\n\r\noutput = 0;\r\ninput = in1;\r\nfreq = in2;\r\nbw = in3;\r\n\r\ny0 = 0;\r\ny1 = m_y1;\r\ny2 = m_y2;\r\na0 = m_a0;\r\nb1 = m_b1;\r\nb2 = m_b2;\r\n\r\nif (freq != m_freq || bw != m_bw) {\r\n    _pfreq = freq * PI / samplerate;\r\n    _pbw = bw * _pfreq * 0.5;\r\n\r\n    _C = 1 / tan(_pbw);\r\n    _D = 2 * cos(_pfreq);\r\n\r\n    _a0 = 1 / (1 + _C);\r\n    _b1 = _C * _D * _a0;\r\n    _b2 = (1 - _C) * _a0;\r\n\r\n    y0 = in + _b1 * y1 + _b2 * y2;\r\n    output = _a0 * (y0 - y2);\r\n    y2 = y1;\r\n    y1 = y0;\r\n\r\n    m_freq = freq;\r\n    m_bw = bw;\r\n    m_a0 = _a0;\r\n    m_b1 = _b1;\r\n    m_b2 = _b2;\r\n} else {\r\n    y0 = in + b1 * y1 + b2 * y2;\r\n    output = a0 * (y0 - y2);\r\n    y2 = y1;\r\n    y1 = y0;\r\n}\r\nm_y1 = y1;\r\nm_y2 = y2;\r\n\r\nout1 = output;",
+					"fontface" : 0,
+					"fontname" : "<Monospaced>",
+					"fontsize" : 12.0,
+					"id" : "obj-3",
+					"maxclass" : "codebox",
+					"numinlets" : 3,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 15.0, 75.0, 480.0, 705.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 15.0, 810.0, 41.0, 23.0 ],
+					"text" : "out 1"
+				}
+
+			}
+ ],
+		"lines" : [ 			{
+				"patchline" : 				{
+					"destination" : [ "obj-3", 0 ],
+					"source" : [ "obj-1", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-3", 1 ],
+					"source" : [ "obj-2", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"source" : [ "obj-3", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-3", 2 ],
+					"source" : [ "obj-5", 0 ]
+				}
+
+			}
+ ]
+	}
+
+}
